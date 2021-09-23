@@ -15,9 +15,19 @@ export default class CsvParser {
     }
 
     run1() {
-        let writeText = fs.createWriteStream(PATH.JSON_TXT1);
+        let writeText;
+        try {
+            writeText = fs.createWriteStream(PATH.JSON_TXT1);
+        } catch (error) {
+            console.error(error)
+            return;
+        }
+
         fs.createReadStream(PATH.CSV)
             .pipe(csv())
-            .on('data', (data) => writeText.write(data));
+            .on('data', (data) => writeText.write(data))
+            .on('error', (err) => {
+                console.error(err);
+            });
     }
 }
